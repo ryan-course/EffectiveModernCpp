@@ -7,7 +7,8 @@
 using namespace std;
 
 class Widget {
-public:
+public://成员函数的引用限定符
+              //  |
     void doWork() & {cout<<"call by left value"<<endl;}    //只有*this为左值的时候才能被调用
     void doWork() && {cout<<"call by right value"<<endl;}   //只有*this为右值的时候才能被调用
 }; 
