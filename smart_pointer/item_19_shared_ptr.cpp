@@ -14,12 +14,13 @@
 #include <vector>
 using namespace std;
 
-std::vector<std::shared_ptr<Widget>> processedWidgets;
 
 class Widget: public std::enable_shared_from_this<Widget> {
 public:
     void process();
 };
+
+std::vector<std::shared_ptr<Widget>> processedWidgets;
 
 void Widget::process()
 {
@@ -27,7 +28,6 @@ void Widget::process()
     //把指向当前对象的std::shared_ptr加入processedWidgets
     processedWidgets.emplace_back(shared_from_this());
 }
-
 
 int main()
 {
