@@ -2,6 +2,7 @@
 	当从std::shared_ptr上创建std::weak_ptr时两者指向相同的对象，但是std::weak_ptr不会影响所指对象的引用计数
 	  两者的大小是相同的，使用相同的控制块（参见Item19），构造、析构、赋值操作涉及(第二个)引用计数的原子操作
 	  在控制块中还是有第二个引用计数，std::weak_ptr操作的是第二个引用计数
+	通过std::shared_ptr的make函数分配的内存，直到最后一个std::shared_ptr和最后一个指向它的std::weak_ptr已被销毁，才会释放。
 	
 	用std::weak_ptr替代可能会悬空的std::shared_ptr
 	**weak_ptr常用于检测缓存是否过期, 和观察者列表**

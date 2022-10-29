@@ -4,6 +4,7 @@
 	一种用于单个对象（std::unique_ptr<T>），一种用于数组（std::unique_ptr<T[]>）
 
 	在严格分层的数据结构比如树中,从父到子的链接关系可以使用std::unique_ptr很好的表征
+	不适合使用make函数的情况包括需要指定自定义删除器和希望用花括号初始化。
 
 	得通过`reset`来让unique_ptr接管通过`new`创建的对象的所有权
 	将std::unique_ptr转化为std::shared_ptr非常简单, 

@@ -31,7 +31,19 @@ void Widget::process()
 
 int main()
 {
-	
+	//推荐用make函数创建智能指针
+	auto upw1(std::make_unique<Widget>());      //使用make函数
+	std::unique_ptr<Widget> upw2(new Widget);   //不使用make函数
+	auto spw1(std::make_shared<Widget>());      //使用make函数
+	std::shared_ptr<Widget> spw2(new Widget);   //不使用make函数
+
+	//除非需要指定自定义删除器
+	std::unique_ptr<Widget, decltype(widgetDeleter)>
+    upw(new Widget, widgetDeleter);
+
+	std::shared_ptr<Widget> spw(new Widget, widgetDeleter);
+
+		
 	return 0;
 }
 
