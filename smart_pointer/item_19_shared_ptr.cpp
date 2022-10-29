@@ -1,62 +1,37 @@
 /*
-	std::unique_ptr 只可移动(移动后,源指针被设为null),不能拷贝
-	默认情况下，资源析构通过对std::unique_ptr里原始指针调用delete来实现
-	一种用于单个对象（std::unique_ptr<T>），一种用于数组（std::unique_ptr<T[]>）
+	std::shared_ptr为有共享所有权的任意资源提供一种自动垃圾回收的便捷方式。
+	较之于std::unique_ptr,std::shared_ptr对象通常大两倍,包含一个指向对象的指针和一个指向控制块的指针
+	控制块内包含引用计数,弱引用计数,自定义删除器和自定义分配器
+	引用计数的开销: 需要原子性的引用计数修改操作。
 
-	得通过`reset`来让unique_ptr接管通过`new`创建的对象的所有权
-	将std::unique_ptr转化为std::shared_ptr非常简单, 
+	当你想在成员函数中使用std::shared_ptr指向this所指对象时,要使用`shared_from_this`,它不会创建多余的控制块
+
+	避免从原始指针变量上创建std::shared_ptr, 如果使用同一个原始指针创建两个shared_ptr,会出错
+	std::shared_ptr不能处理数组
 */
 #include <iostream>
 #include <memory>
+#include <vector>
 using namespace std;
 
-class Investment {
+std::vector<std::shared_ptr<Widget>> processedWidgets;
+
+class Widget: public std::enable_shared_from_this<Widget> {
 public:
-    virtual ~Investment();          //关键设计部分！
+    void process();
 };
 
-Investment::~Investment(){}
-
-
-// template<typename... Ts>
-// auto makeInvestment(Ts&&... params)                 //C++14
-// {
-//     auto delInvmt = [](Investment* pInvestment)     //现在在
-//                     {                               //makeInvestment里
-//                         makeLogEntry(pInvestment);
-//                         delete pInvestment; 
-//                     };
-
-//     std::unique_ptr<Investment, decltype(delInvmt)> //自定义删除器
-//         pInv(nullptr, delInvmt);
-//    //  if ( … )                                        //同之前一样
-//     {
-//         pInv.reset(new Stock(std::forward<Ts>(params)...));	//接管通过`new`创建的对象的所有权
-//     }
-//    //  else if ( … )                                   //同之前一样
-//     {     
-//         pInv.reset(new Bond(std::forward<Ts>(params)...));   
-//     }   
-//    //  else if ( … )                                   //同之前一样
-//     {     
-//         pInv.reset(new RealEstate(std::forward<Ts>(params)...));   
-//     }   
-//     return pInv;                                    //同之前一样
-// }
+void Widget::process()
+{
+    //和之前一样，处理Widget
+    //把指向当前对象的std::shared_ptr加入processedWidgets
+    processedWidgets.emplace_back(shared_from_this());
+}
 
 
 int main()
 {
-	auto p = std::make_unique<Investment>(); // with make func
-	auto p1(std::make_unique<Investment>()); // with make func
-	std::unique_ptr<Investment> upw2(new Investment); // with new, without make func
-
-	std::unique_ptr<Investment> ptr;
-	ptr.reset(new Investment());
 	
-
-	std::shared_ptr<Investment> sp = std::make_unique<Investment>();         //将std::unique_ptr 转为std::shared_ptr
-
 	return 0;
 }
 
