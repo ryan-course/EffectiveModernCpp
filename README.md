@@ -3,6 +3,13 @@
 
 # C++标准术语
 
+- 移动语义（ move semantics ）
+- 完美转发（ perfect forwarding ）
+  - 不仅转发对象，我们还转发显著的特征：它们的类型，是左值还是右值，是const还是volatile
+- 位域
+  - 最低有效位（least significant bit，lsb）
+  - 最高有效位（most significant bit，msb）
+
 ## 手法
 
 ### RAII (Resource Acquisition Is Initialization) 资源获得即初始化
@@ -27,7 +34,7 @@ RAII对象 （ RAII objects ），从 RAII类 中实例化。（RAII全称为 "R
 
 是指C++语言在模板参数匹配失败时不认为这是一个编译错误
 
-### type traits（类型特性）
+### Type Traits（类型特性）
 
 C++11在type traits（类型特性）中给了你一系列工具去实现类型转换，如果要使用这些模板请包含头文件<type_traits>
 - ==C++11的type traits是通过在struct内嵌套`typedef`来实现的== 	`typedef 类型 别名`
@@ -58,7 +65,7 @@ std::is_base_of<T1, T2>     //判断一个类型是否继承自另一个类型, 
 std::is_constructible<T1, T2>   //确定一个类型T1的对象是否可以用另一个不同类型T2（或多个类型）的对象（或多个对象）来构造
 ```
 
-### 引用折叠（reference collapsing）
+### Reference Collapsing（引用折叠）
 
 在C++中手写引用的引用是非法的, 但是编译器会在特定的上下文中产生, 最终会推导为单个引用
 **如果任一引用为左值引用，则结果为左值引用。否则（即，如果引用都是右值引用），结果为右值引用。**
@@ -73,9 +80,9 @@ std::is_constructible<T1, T2>   //确定一个类型T1的对象是否可以用�
 
 重载规则规定当模板实例化函数和非模板函数（或者称为"正常"函数）匹配优先级相当时，优先使用"正常"函数
 
-### cv限定符（cv-qualifiers，即const或volatile标识符）
+### cv-qualifiers（cv限定符，即const或volatile标识符）
 
-## 编译器优化
+## 编译器自动做的优化
 
 ### RVO（return value optimization）返回值优化
 
@@ -97,3 +104,21 @@ Widget makeWidget()                 //makeWidget的"拷贝"版本
 
 ### SSO（small string optimization）小字符串优化
 
+“小”字符串（比如长度小于15个字符的）存储在了std::string的缓冲区中，并没有存储在堆内存。
+SSO的动机是大量证据表明，短字符串是大量应用使用的习惯。使用内存缓冲区存储而不分配堆内存空间，是为了更好的效率。
+
+### const propagation（常量传播）
+
+无需在类中定义整型static const数据成员；声明就可以了
+
+```cpp
+class Widget {
+public:
+    static const std::size_t MinVals = 28;  //MinVal的声明
+    …
+};
+…                                           //没有MinVals定义
+
+std::vector<int> widgetData;
+widgetData.reserve(Widget::MinVals);        //使用MinVals
+```
