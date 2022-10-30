@@ -55,6 +55,32 @@ int main()
 	//-------------
 	std::cout << typeid(x1).name() << std::endl; //输出 'i', 表示 int
 
+	//-------------
+	// const int i = 0;                //decltype(i)是const int
+
+	// bool f(const Widget& w);        //decltype(w)是const Widget&
+	// 										//decltype(f)是bool(const Widget&)
+
+	// struct Point{
+	// 	int x,y;                    //decltype(Point::x)是int
+	// };                              //decltype(Point::y)是int
+
+	// Widget w;                       //decltype(w)是Widget
+
+	// if (f(w))…                      //decltype(f(w))是bool
+
+	// template<typename T>            //std::vector的简化版本
+	// class vector{
+	// public:
+	// 	…
+	// 	T& operator[](std::size_t index);
+	// 	…
+	// };
+
+	// vector<int> v;                  //decltype(v)是vector<int>
+	// …
+	// if (v[0] == 0)…                 //decltype(v[0])是int&
+
 	return 0;
 }
 

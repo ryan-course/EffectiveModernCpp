@@ -44,7 +44,7 @@ int main()
 	{
 		// start timer;
 		std::forward<decltype(func)>(func)( //对params调用func
-			 std::forward<delctype(params)>(params)...);
+			 std::forward<delctype(params)>(params)...); //对auto&&形参使用decltype以std::forward它们
 		// stop timer and record elapsed time;
 	};
 

@@ -20,6 +20,20 @@ RAII对象 （ RAII objects ），从 RAII类 中实例化。（RAII全称为 "R
 
 将类数据成员替换成一个指向包含具体实现的类（或结构体）的指针，并将放在主类（primary class）的数据成员们移动到实现类（implementation class）去，而这些数据成员的访问将通过指针间接访问。
 
+### Lambda (lambda expression) lambda表达式
+
+==闭包类==:
+每个lambda都会使编译器生成唯一的闭包类。lambda中的语句成为其闭包类的成员函数中的可执行指令。
+
+==闭包==
+闭包(enclosure)是闭包类（closure class）实例化的对象。
+闭包(enclosure)是lambda创建的运行时对象。闭包持有被捕获数据的副本或者引用。
+
+```cpp
+std::find_if(container.begin(), container.end(),
+             [](int val){ return 0 < val && val < 10; }); //lambda
+```
+
 ## 模板
 
 ### TMP（template metaprogramming）模板元编程
@@ -74,7 +88,7 @@ std::is_constructible<T1, T2>   //确定一个类型T1的对象是否可以用�
 - 模板实例化，
 - auto类型推导，
 - typedef与别名声明的创建和使用，
-- decltype
+- decltype: 总是不加修改的产生变量或者表达式的类型
 
 ### 重载规则
 
@@ -104,7 +118,7 @@ Widget makeWidget()                 //makeWidget的"拷贝"版本
 
 ### SSO（small string optimization）小字符串优化
 
-“小”字符串（比如长度小于15个字符的）存储在了std::string的缓冲区中，并没有存储在堆内存。
+"小字符串（比如长度小于15个字符的）存储在了std::string的缓冲区中，并没有存储在堆内存。
 SSO的动机是大量证据表明，短字符串是大量应用使用的习惯。使用内存缓冲区存储而不分配堆内存空间，是为了更好的效率。
 
 ### const propagation（常量传播）
