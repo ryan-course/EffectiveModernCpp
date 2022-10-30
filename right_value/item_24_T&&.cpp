@@ -1,6 +1,6 @@
 /*
 	“T&&”是通用引用, 它既可以是右值引用，也可以是左值引用。这种引用在源码里看起来像右值引用（即“T&&”），但是它们可以表现得像是左值引用（即“T&”）
-	'auto&&'是通用引用,会发生类型推导，并且它们具有正确形式(T&&)
+	'auto&&'的变量可以是通用引用,会发生类型推导，并且它们具有正确形式(T&&)
 	存在类型推导的过程,是通用引用; 没有类型推导,则是右值引用
 	把它叫做通用引用（universal references）。
 */
@@ -50,6 +50,14 @@ int main()
 
 	return 0;
 }
+
+//标准库中支持完美转发的make方法 (支持无限个参数)
+// template<class T, class... Args>                //来自C++11标准
+// shared_ptr<T> make_shared(Args&&... args);
+
+// template<class T, class... Args>                //来自C++14标准
+// unique_ptr<T> make_unique(Args&&... args);
+
 
 // 编译:命令
 // g++ 'item_24_T&&.cpp' -o main; ./main
