@@ -142,3 +142,32 @@ widgetData.reserve(Widget::MinVals);        //使用MinVals
 - 线程本地存储（thread-local storage，TLS）
   - std::future_status::ready 已准备状态 (其它表示执行完毕)
   - std::future_status::deferred 被延迟状态
+
+### Chanel的实现
+
+![](https://cntransgroup.github.io/EffectiveModernCppChinese/7.TheConcurrencyAPI/media/item38_fig1.png)
+
+被调用者（通常是异步执行）将计算结果写入通信信道中（通常通过std::promise对象），调用者使用future读取结果
+
+```cpp
+std::promise<void> p;                   //通信信道的promise
+
+//检测任务代码
+…                                       //检测某个事件
+p.set_value();                          //通知反应任务
+
+//反应任务代码
+…                                       //准备作出反应
+p.get_future().wait();                  //等待对应于p的那个future
+…                                       //对事件作出反应
+
+```
+
+### shared state 共享状态
+
+存储channel返回值的地方, 共享状态通常是基于堆的对象, 由引用它的future和被调用者的std::promise共同控制的。
+带个引用计数器, 这个引用计数让库知道共享状态什么时候可以被销毁
+
+调用者，被调用者，共享状态之间关系如下图
+
+![](https://cntransgroup.github.io/EffectiveModernCppChinese/7.TheConcurrencyAPI/media/item38_fig2.png)
